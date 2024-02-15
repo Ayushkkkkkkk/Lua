@@ -199,20 +199,15 @@ require('lazy').setup({
       end,
     },
   },
+  
 
-  {
-    -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    lazy = false,
-    config = function()
-      require('onedark').setup {
-        -- Set a style preset. 'dark' is default.
-        style = 'dark', -- dark, darker, cool, deep, warm, warmer, light
-      }
-      require('onedark').load()
-    end,
-  },
+{
+    'rose-pine/neovim',
+        as = 'rose-pine',
+        config = function()
+            vim.cmd('colorscheme rose-pine')
+        end
+    },
 
   {
     -- Set lualine as statusline
@@ -236,6 +231,33 @@ require('lazy').setup({
     main = 'ibl',
     opts = {},
   },
+  {
+  "nvim-neo-tree/neo-tree.nvim",
+  version = "*",
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+    "MunifTanjim/nui.nvim",
+  },
+  config = function ()
+    require('neo-tree').setup {}
+  end,
+},
+  {
+  "windwp/nvim-autopairs",
+  -- Optional dependency
+  dependencies = { 'hrsh7th/nvim-cmp' },
+  config = function()
+    require("nvim-autopairs").setup {}
+    -- If you want to automatically add `(` after selecting a function or method
+    local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+    local cmp = require('cmp')
+    cmp.event:on(
+      'confirm_done',
+      cmp_autopairs.on_confirm_done()
+    )
+  end,
+},
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
@@ -261,6 +283,18 @@ require('lazy').setup({
     },
   },
 
+ {
+    'neovim/nvim-lspconfig',
+    config = function()
+        require('lspconfig').rust_analyzer.setup{}
+    end
+},
+  {
+    '907th/vim-auto-save',
+    config = function()
+        vim.g.auto_save = true -- Enable autosaving
+    end
+},
   {
     -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
@@ -288,6 +322,24 @@ require('lazy').setup({
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
+
+
+-- Keybindings for { completion, "jk" for escape, ctrl-a to select all
+vim.api.nvim_set_keymap('i', '{<CR>', '{<CR>}<Esc>O', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', 'jk', '<Esc>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('', '<C-a>', '<esc>ggVG<CR>', { noremap = true, silent = true })
+
+-- Disable all bells
+vim.opt.belloff:append("all")
+
+-- Keybinding for toggling Neotree
+vim.api.nvim_set_keymap('n', '<C-t>', ':Neotree<CR>', { noremap = true, silent = true })
+
+-- Map <Leader>n to exit insert mode in terminal buffers
+vim.api.nvim_exec([[
+  autocmd TermOpen * tnoremap <buffer> <Leader>n <C-\><C-n>
+]], false)
+
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -588,10 +640,10 @@ require('mason-lspconfig').setup()
 local servers = {
   -- clangd = {},
   -- gopls = {},
-  -- pyright = {},
-  -- rust_analyzer = {},
-  -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+   --pyright = {},
+   rust_analyzer = {},
+   --tsserver = {},
+   --html = { filetypes = { 'html', 'twig', 'hbs'} },
 
   lua_ls = {
     Lua = {
@@ -679,6 +731,39 @@ cmp.setup {
     { name = 'path' },
   },
 }
+
+function ColorMyPencils(color)
+    color = color or "rose-pine"
+    
+    -- Configure the Rose Pine color scheme
+    require('rose-pine').setup({
+        disable_background = true,
+        styles = {
+          italic = false
+    }
+    })
+    
+    -- Set the Vim color scheme
+    vim.cmd.colorscheme(color)
+    
+    -- Set additional customizations
+    vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+    vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+
+    -- Remove italics from specific highlight groups
+    vim.cmd("highlight! link Comment NONE")
+    vim.cmd("highlight! link Normal NONE")
+    vim.cmd("highlight! link Identifier NONE")
+    vim.cmd("highlight! link Function NONE")
+    vim.cmd("highlight! link Keyword NONE")
+    vim.cmd("highlight! link Statement NONE")
+    -- Add more highlight groups if necessary
+end
+
+ColorMyPencils()
+
+
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
