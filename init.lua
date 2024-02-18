@@ -288,6 +288,13 @@ require('lazy').setup({
     end
 },
   {
+    'numToStr/Comment.nvim',
+    opts = {
+        -- add any options here
+    },
+    lazy = false,
+},
+  {
     -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
@@ -799,6 +806,10 @@ augroup END
 
 vim.api.nvim_command("autocmd FileType cpp setlocal shiftwidth=4")
 vim.api.nvim_command("autocmd FileType cpp setlocal tabstop=4")
+
+-- Comments
+vim.api.nvim_set_keymap("n", "<C-_>", "gcc", { noremap = false })
+vim.api.nvim_set_keymap("v", "<C-_>", "gcc", { noremap = false })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
