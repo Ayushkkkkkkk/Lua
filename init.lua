@@ -231,6 +231,12 @@ require('lazy').setup({
       },
     },
   },
+  {
+  'nvim-lua/plenary.nvim'
+  },
+  {
+    'ThePrimeagen/harpoon'
+  },
 
   {
     -- Add indentation guides even on blank lines
@@ -309,6 +315,12 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     config = function()
         require('lspconfig').eslint.setup{}
+    end
+  },
+ {
+    'neovim/nvim-lspconfig',
+    config = function()
+        require('lspconfig').clangd.setup{}
     end
   },
   {
@@ -666,7 +678,7 @@ require('mason-lspconfig').setup()
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
-  -- clangd = {},
+   clangd = {},
   -- gopls = {},
    --pyright = {},
    rust_analyzer = {},
@@ -803,6 +815,39 @@ vim.cmd('autocmd!')
 vim.cmd('autocmd BufWritePre * :undojoin | :Neoformat')
 vim.cmd('augroup END')
 
+
+local mark = require("harpoon.mark")
+local ui = require("harpoon.ui")
+
+vim.keymap.set("n", "<leader>ad", mark.add_file)
+vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
+
+vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)
+vim.keymap.set("n", "<C-g>", function() ui.nav_file(2) end)
+vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end)
+vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end)
+
+vim.api.nvim_exec([[
+augroup cpp_mappings
+  autocmd!
+  autocmd FileType cpp nnoremap <buffer> <F9> :w <bar> !g++ -std=c++14 % -o %:r<CR>
+  autocmd FileType cpp nnoremap <buffer> <F10> :terminal ./%:r<CR>
+  autocmd FileType cpp nnoremap <buffer> <C-c> :%s/^\(\s*\)/\1\/\/<CR>:s/^\(\s*\)\/\/\/\//\1<CR>
+augroup END
+]], false)
+
+
+
+vim.api.nvim_exec([[
+  augroup Format
+    autocmd!
+    autocmd BufWritePre *.cpp,*.h,*.cc,*.cxx,*.hpp,*.hh,*.hxx,*.c,*.tpp,*.ipp,*.inl,*.tl,*.cu,*.cl,*.drc setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+    autocmd BufWritePre *.cpp,*.h,*.cc,*.cxx,*.hpp,*.hh,*.hxx,*.c,*.tpp,*.ipp,*.inl,*.tl,*.cu,*.cl,*.drc lua vim.lsp.buf.formatting_sync(nil, 100)
+  augroup END
+]], false)
+
+vim.api.nvim_command("autocmd FileType cpp setlocal shiftwidth=3")
+vim.api.nvim_command("autocmd FileType cpp setlocal tabstop=3")
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
