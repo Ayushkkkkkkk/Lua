@@ -838,13 +838,6 @@ augroup END
 
 
 
-vim.api.nvim_exec([[
-  augroup Format
-    autocmd!
-    autocmd BufWritePre *.cpp,*.h,*.cc,*.cxx,*.hpp,*.hh,*.hxx,*.c,*.tpp,*.ipp,*.inl,*.tl,*.cu,*.cl,*.drc setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-    autocmd BufWritePre *.cpp,*.h,*.cc,*.cxx,*.hpp,*.hh,*.hxx,*.c,*.tpp,*.ipp,*.inl,*.tl,*.cu,*.cl,*.drc lua vim.lsp.buf.formatting_sync(nil, 100)
-  augroup END
-]], false)
 
 vim.api.nvim_command("autocmd FileType cpp setlocal shiftwidth=3")
 vim.api.nvim_command("autocmd FileType cpp setlocal tabstop=3")
