@@ -166,7 +166,9 @@ require('lazy').setup({
       end,
     },
   },
-  
+  {
+  'mbbill/undotree'
+  }, 
 
 {
     'rose-pine/neovim',
@@ -363,6 +365,18 @@ vim.opt.relativenumber = true
 -- Enable break indent
 vim.o.breakindent = true
 
+vim.o.tabstop = 4
+vim.o.softtabstop = 4
+vim.o.shiftwidth = 4
+vim.o.expandtab = 4
+
+vim.o.hlsearch = false
+vim.o.incsearch = true
+
+vim.o.scrolloff = 8
+
+vim.o.colorcolumn = "80"
+
 -- Save undo history
 vim.o.undofile = true
 
@@ -374,7 +388,7 @@ vim.o.smartcase = true
 vim.wo.signcolumn = 'yes'
 
 -- Decrease update time
-vim.o.updatetime = 250
+vim.o.updatetime = 50
 vim.o.timeoutlen = 300
 
 -- Set completeopt to have a better completion experience
