@@ -12,11 +12,13 @@ if not vim.loop.fs_stat(lazypath) then
     'git',
     'clone',
     '--filter=blob:none',
-    'https://github.com/folke/lazy.nvim.git',
+   'https://github.com/folke/lazy.nvim.git',
     '--branch=stable', -- latest stable release
     lazypath,
   }
-end
+ end
+
+
 vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure plugins ]]
@@ -61,6 +63,8 @@ require('lazy').setup({
   {
     'sbdchd/neoformat'
   },
+   {'akinsho/toggleterm.nvim'},
+
 
   {
     -- Autocompletion
@@ -375,7 +379,7 @@ vim.o.incsearch = true
 
 vim.o.scrolloff = 8
 
-vim.o.colorcolumn = "80"
+
 
 -- Save undo history
 vim.o.undofile = true
@@ -625,6 +629,27 @@ local on_attach = function(_, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 end
 
+
+require("toggleterm").setup{
+  size = 20,
+  open_mapping = [[<c-x>]],
+  shade_filetypes = {},
+  shade_terminals = true,
+  shading_factor = '1',
+  start_in_insert = true,
+  persist_size = true,
+  direction = 'float',
+  hide_numbers = true,
+  float_opts = {
+    border = "curved",
+    winblend = 0,
+    highlights = {
+      border = "Normal",
+      background = "Normal",
+    },
+  },
+}
+
 -- document existing key chains
 require('which-key').register {
   ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
@@ -638,6 +663,9 @@ require('which-key').register {
 }
 -- register which-key VISUAL mode
 -- required for visual <leader>hs (hunk stage) to work
+--
+--
+
 require('which-key').register({
   ['<leader>'] = { name = 'VISUAL <leader>' },
   ['<leader>h'] = { 'Git [H]unk' },
@@ -814,7 +842,6 @@ augroup cpp_mappings
   autocmd FileType cpp nnoremap <buffer> <C-c> :%s/^\(\s*\)/\1\/\/<CR>:s/^\(\s*\)\/\/\/\//\1<CR>
 augroup END
 ]], false)
-
 
 
 
