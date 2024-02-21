@@ -12,6 +12,7 @@ set number
 set relativenumber
 set cino+=L0
 :set mouse=a
+set signcolumn=no
 syntax on
 filetype indent on
 filetype off
@@ -25,6 +26,8 @@ imap jk         <Esc>
 map <C-a> <esc>ggVG<CR>
 set belloff=all
 
+
+
 tnoremap <C-n> <C-\><C-n>
 
 " Automatically save the file and run Rust code when pressing Ctrl+Alt+B
@@ -34,19 +37,20 @@ nnoremap <silent> <C-M-b> :w<CR>:silent !cargo run<CR>:redraw!<CR>
 autocmd BufWritePost *.rs :silent !cargo run
 
 " Set transparency for all highlight groups
-autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE
-autocmd VimEnter * hi NonText guibg=NONE ctermbg=NONE
-autocmd VimEnter * hi LineNr guibg=NONE ctermbg=NONE
-autocmd VimEnter * hi SignColumn guibg=NONE ctermbg=NONE
-autocmd VimEnter * hi VertSplit guibg=NONE ctermbg=NONE
-autocmd VimEnter * hi FoldColumn guibg=NONE ctermbg=NONE
+
+
+let g:mapleader = ' '
 
 
 call plug#begin()
+Plug 'akinsho/nvim-toggleterm.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'ThePrimeagen/harpoon'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.5' }
 Plug 'ellisonleao/gruvbox.nvim'
-Plug 'rose-pine/neovim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'rust-lang/rust.vim'
+Plug 'https://github.com/preservim/tagbar' " Tagbar for code navigation
 Plug 'http://github.com/tpope/vim-surround' " Surrounding ysw)
 Plug 'https://github.com/preservim/nerdtree' " NerdTree
 Plug 'https://github.com/tpope/vim-commentary' " For Commenting gcc & gc
@@ -57,13 +61,11 @@ Plug 'https://github.com/rafi/awesome-vim-colorschemes' " Retro Scheme
 Plug 'https://github.com/neoclide/coc.nvim'  " Auto Completion
 Plug 'https://github.com/ryanoasis/vim-devicons' " Developer Icons
 Plug 'https://github.com/tc50cal/vim-terminal' " Vim Terminal
-Plug 'https://github.com/preservim/tagbar' " Tagbar for code navigation
 Plug 'https://github.com/terryma/vim-multiple-cursors' " CTRL + N for multiple cursors
 call plug#end()
 
 " Autosave after 1 second of inactivity
 autocmd CursorHold * if mode() != 'n' | silent! wall | endif
-
 
 nnoremap <C-f> :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
@@ -72,13 +74,17 @@ nnoremap <C-l> :call CocActionAsync('jumpDefinition')<CR>
 
 nmap <F8> :TagbarToggle<CR>
 
-:set completeopt-=preview " For No Previews
 
+
+
+
+
+
+:set completeopt-=preview " For No Previews
 
 
 :colorscheme jellybeans
 let g:coc_global_extensions = ['coc-clangd']
-let g:gruvbox_transparent_bg = 1
 " Enable Rust syntax highlighting
 syntax enable
 
@@ -135,6 +141,7 @@ if !exists('g:airline_symbols')
 endif
 
 " airline symbols
+" airline symbols
 let g:airline_left_sep = 'εé░'
 let g:airline_left_alt_sep = 'εé▒'
 let g:airline_right_sep = 'εé▓'
@@ -142,6 +149,7 @@ let g:airline_right_alt_sep = 'εé│'
 let g:airline_symbols.branch = 'εéá'
 let g:airline_symbols.readonly = 'εéó'
 let g:airline_symbols.linenr = 'εéí'
+
 
 
 
@@ -219,6 +227,49 @@ function MyDiff()
     let &shellxquote=l:shxq_sav
   endif
 endfunction
+
+ 
+:lua << END
+
+    vim.keymap.set('n', '<leader>s/', ':lua telescope_live_grep_open_files()<CR>', { desc = '[S]earch [/] in Open Files' })
+vim.keymap.set('n', '<leader>ss', ':lua require("telescope.builtin").builtin()<CR>', { desc = '[S]earch [S]elect Telescope' })
+vim.keymap.set('n', '<leader>gf', ':lua require("telescope.builtin").git_files()<CR>', { desc = 'Search [G]it [F]iles' })
+vim.keymap.set('n', '<leader>sf', ':lua require("telescope.builtin").find_files()<CR>', { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>sh', ':lua require("telescope.builtin").help_tags()<CR>', { desc = '[S]earch [H]elp' })
+vim.keymap.set('n', '<leader>sw', ':lua require("telescope.builtin").grep_string()<CR>', { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<leader>sg', ':lua require("telescope.builtin").live_grep()<CR>', { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>sG', ':lua require("telescope.builtin").grep_string({ search = vim.fn.input("Grep for > ")})<CR>', { desc = '[S]earch by [G]rep on Git Root' })
+vim.keymap.set('n', '<leader>sd', ':lua require("telescope.builtin").lsp_document_symbols()<CR>', { desc = '[S]earch [D]iagnostics' })
+vim.keymap.set('n', '<leader>sr', ':lua require("telescope.builtin").resume()<CR>', { desc = '[S]earch [R]esume' })
+
+
+vim.keymap.set('n', '<leader>?', ':lua require("telescope.builtin").oldfiles()<CR>', { desc = '[?] Find recently opened files' })
+vim.keymap.set('n', '<leader><space>', ':lua require("telescope.builtin").buffers()<CR>', { desc = '[ ] Find existing buffers' })
+vim.keymap.set('n', '<leader>/', function()
+    -- You can pass additional configuration to telescope to change theme, layout, etc.
+    require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+        winblend = 10,
+        previewer = false,
+    })
+end, { desc = '[/] Fuzzily search in current buffer' })
+
+local mark = require("harpoon.mark")
+local ui = require("harpoon.ui")
+
+vim.keymap.set("n", "<leader>ad", function() mark.add_file() end)
+vim.keymap.set("n", "<C-e>", function() ui.toggle_quick_menu() end)
+
+vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)
+vim.keymap.set("n", "<C-g>", function() ui.nav_file(2) end)
+vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end)
+vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end)
+
+
+END
+
+
+
+
 
 
 

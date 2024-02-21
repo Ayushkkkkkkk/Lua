@@ -372,7 +372,7 @@ vim.o.breakindent = true
 vim.o.tabstop = 4
 vim.o.softtabstop = 4
 vim.o.shiftwidth = 4
-vim.o.expandtab = 4
+vim.o.expandtab = false
 
 vim.o.hlsearch = false
 vim.o.incsearch = true
@@ -823,16 +823,16 @@ vim.cmd('autocmd BufWritePre * :undojoin | :Neoformat')
 vim.cmd('augroup END')
 
 
-local mark = require("harpoon.mark")
-local ui = require("harpoon.ui")
+  local mark = require("harpoon.mark")
+  local ui = require("harpoon.ui")
 
-vim.keymap.set("n", "<leader>ad", mark.add_file)
-vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
+  vim.keymap.set("n", "<leader>ad", mark.add_file)
+  vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
 
-vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)
-vim.keymap.set("n", "<C-g>", function() ui.nav_file(2) end)
-vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end)
-vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end)
+  vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)
+  vim.keymap.set("n", "<C-g>", function() ui.nav_file(2) end)
+  vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end)
+  vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end)
 
 vim.api.nvim_exec([[
 augroup cpp_mappings
