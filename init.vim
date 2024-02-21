@@ -43,7 +43,7 @@ let g:mapleader = ' '
 
 
 call plug#begin()
-Plug 'akinsho/nvim-toggleterm.nvim'
+Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
 Plug 'nvim-lua/plenary.nvim'
 Plug 'ThePrimeagen/harpoon'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.5' }
@@ -149,8 +149,6 @@ let g:airline_right_alt_sep = 'εé│'
 let g:airline_symbols.branch = 'εéá'
 let g:airline_symbols.readonly = 'εéó'
 let g:airline_symbols.linenr = 'εéí'
-
-
 
 
 inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
@@ -264,8 +262,28 @@ vim.keymap.set("n", "<C-g>", function() ui.nav_file(2) end)
 vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end)
 vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end)
 
+require("toggleterm").setup{
+  size = 20,
+  open_mapping = [[<c-x>]],
+  shade_filetypes = {},
+  shade_terminals = true,
+  shading_factor = '1',
+  start_in_insert = true,
+  persist_size = true,
+  direction = 'float',
+  hide_numbers = true,
+  float_opts = {
+    border = "curved",
+    winblend = 0,
+    highlights = {
+      border = "Normal",
+      background = "Normal",
+    },
+  },
+}
 
 END
+
 
 
 
