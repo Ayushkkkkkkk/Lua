@@ -28,6 +28,7 @@ set belloff=all
 
 
 
+
 tnoremap <C-n> <C-\><C-n>
 
 " Automatically save the file and run Rust code when pressing Ctrl+Alt+B
