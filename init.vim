@@ -8,8 +8,6 @@ set ruler
 set showcmd
 set incsearch
 set shellslash
-set number
-set relativenumber
 set cino+=L0
 :set mouse=a
 set signcolumn=no
@@ -25,9 +23,15 @@ inoremap {}     {}
 imap jk         <Esc>
 map <C-a> <esc>ggVG<CR>
 set belloff=all
+set number
+set relativenumber
 
-
-
+autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE
+autocmd VimEnter * hi NonText guibg=NONE ctermbg=NONE
+autocmd VimEnter * hi LineNr guibg=NONE ctermbg=NONE
+autocmd VimEnter * hi SignColumn guibg=NONE ctermbg=NONE
+autocmd VimEnter * hi VertSplit guibg=NONE ctermbg=NONE
+autocmd VimEnter * hi FoldColumn guibg=NONE ctermbg=NONE
 
 tnoremap <C-n> <C-\><C-n>
 
@@ -47,6 +51,7 @@ call plug#begin()
 Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
 Plug 'nvim-lua/plenary.nvim'
 Plug 'ThePrimeagen/harpoon'
+Plug 'ThePrimeagen/vim-be-good'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.5' }
 Plug 'ellisonleao/gruvbox.nvim'
 Plug 'prabirshrestha/vim-lsp'
@@ -61,7 +66,6 @@ Plug 'https://github.com/ap/vim-css-color' " CSS Color Preview
 Plug 'https://github.com/rafi/awesome-vim-colorschemes' " Retro Scheme
 Plug 'https://github.com/neoclide/coc.nvim'  " Auto Completion
 Plug 'https://github.com/ryanoasis/vim-devicons' " Developer Icons
-Plug 'https://github.com/tc50cal/vim-terminal' " Vim Terminal
 Plug 'https://github.com/terryma/vim-multiple-cursors' " CTRL + N for multiple cursors
 call plug#end()
 
@@ -142,7 +146,6 @@ if !exists('g:airline_symbols')
 endif
 
 " airline symbols
-" airline symbols
 let g:airline_left_sep = 'εé░'
 let g:airline_left_alt_sep = 'εé▒'
 let g:airline_right_sep = 'εé▓'
@@ -150,8 +153,6 @@ let g:airline_right_alt_sep = 'εé│'
 let g:airline_symbols.branch = 'εéá'
 let g:airline_symbols.readonly = 'εéó'
 let g:airline_symbols.linenr = 'εéí'
-
-
 inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
 
 noremap <F1> <ESC>:tabprev <CR>
@@ -182,16 +183,10 @@ inoremap {} {}
 "autocmd filetype cpp nnoremap <F10> :!./%:r<CR>
 "autocmd filetype cpp nnoremap <C-C> :s/^\(\s*\)/\1\/\/<CR> :s/^\(\s*\)\/\/\/\//\1<CR> $
 
-autocmd filetype cpp nnoremap <F9> :w <bar> !g++ -std=c++14 % -o %:r<CR>
-autocmd filetype cpp nnoremap <F10> :terminal ./%:r<CR>
+autocmd filetype cpp nnoremap <C-A-b> :w <bar> !g++ -std=c++14 % -o %:r<CR>
+autocmd filetype cpp nnoremap <C-A-c> :terminal ./%:r<CR>
 autocmd filetype cpp nnoremap <C-C> :s/^\(\s*\)/\1\/\/<CR> :s/^\(\s*\)\/\/\/\//\1<CR> $
 
-set nu
-augroup numbertoggle
-    autocmd!
-    autocmd BufEnter,FocusGained,InsertLeave * set rnu
-    autocmd BufLeave,FocusLost,InsertEnter * set nornu
-augroup END
 
 set diffexpr=MyDiff()
 function MyDiff()
@@ -229,7 +224,6 @@ endfunction
 
  
 :lua << END
-
     vim.keymap.set('n', '<leader>s/', ':lua telescope_live_grep_open_files()<CR>', { desc = '[S]earch [/] in Open Files' })
 vim.keymap.set('n', '<leader>ss', ':lua require("telescope.builtin").builtin()<CR>', { desc = '[S]earch [S]elect Telescope' })
 vim.keymap.set('n', '<leader>gf', ':lua require("telescope.builtin").git_files()<CR>', { desc = 'Search [G]it [F]iles' })
@@ -283,7 +277,9 @@ require("toggleterm").setup{
   },
 }
 
+
 END
+
 
 
 
