@@ -1,3 +1,5 @@
+-- Set <space> as the leader key
+-- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -252,11 +254,12 @@ require('lazy').setup {
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
+        defaults = {
+          --   mappings = {
+          --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+          --   },
+          -- sorting_strategy = "ascending",
+        },
         -- pickers = {}
         extensions = {
           ['ui-select'] = {
@@ -718,9 +721,18 @@ require('lazy').setup {
   { 'rebelot/kanagawa.nvim' },
   { 'numToStr/Comment.nvim',           opts = {} },
   { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' },
-  { 'tpope/vim-fugitive' }
-
-
+  { 'tpope/vim-fugitive' },
+  {
+    "nvim-tree/nvim-tree.lua",
+    version = "*",
+    lazy = false,
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
+    config = function()
+      require("nvim-tree").setup {}
+    end,
+  }
 }
 
 
@@ -856,5 +868,7 @@ vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>");
 vim.keymap.set("n", "<leader><leader>", function()
   vim.cmd("so")
 end)
+vim.api.nvim_set_keymap('n', '<C-t>', ':NvimTreeOpen<CR>', { noremap = true, silent = true })
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
