@@ -1,3 +1,4 @@
+--  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
@@ -452,6 +453,7 @@ require('lazy').setup {
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
+
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -633,22 +635,23 @@ require('lazy').setup {
     end,
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
-    'folke/tokyonight.nvim',
-    lazy = false,    -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
-    config = function()
-      -- Load the colorscheme here
-      vim.cmd.colorscheme 'tokyonight-night'
-
-      -- You can configure highlights by doing something like
-      vim.cmd.hi 'Comment gui=none'
-    end,
-  },
+  -- { -- You can easily change to a different colorscheme.
+  --   -- Change the name of the colorscheme plugin below, and then
+  --   -- change the command in the config to whatever the name of that colorscheme is
+  --   --
+  --   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
+  --   'folke/tokyonight.nvim',
+  --   lazy = false,    -- make sure we load this during startup if it is your main colorscheme
+  --   priority = 1000, -- make sure to load this before all the other start plugins
+  --   config = function()
+  --     -- Load the colorscheme here
+  --     vim.cmd.colorscheme 'gruvbox'
+  --
+  --     -- You can configure highlights by doing something like
+  --     vim.cmd.hi 'Comment gui=none'
+  --   end,
+  -- },
+  { "ellisonleao/gruvbox.nvim", priority = 1000,    config = true,                              opts = ... },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
@@ -713,26 +716,19 @@ require('lazy').setup {
     -- this is equalent to setup({}) function
   },
   { 'rebelot/kanagawa.nvim' },
-  { 'numToStr/Comment.nvim',    opts = {} },
-  {
-    "nvim-tree/nvim-tree.lua",
-    version = "*",
-    lazy = false,
-    dependencies = {
-      "nvim-tree/nvim-web-devicons",
-    },
-    config = function()
-      require("nvim-tree").setup {}
-    end,
-  }
+  { 'numToStr/Comment.nvim',           opts = {} },
+  { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' },
+  { 'tpope/vim-fugitive' }
+
+
 }
 
 
 function ColorMyPencils(color)
-  color = color or "tokyonight-night"
+  color = color or "gruvbox"
 
   -- Configure the Rose Pine color scheme
-  require('tokyonight').setup({
+  require('gruvbox').setup({
     disable_background = false,
     styles = {
       italic = false
@@ -743,24 +739,26 @@ function ColorMyPencils(color)
   vim.cmd.colorscheme(color)
 
   -- Set additional customizations
-  -- vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-  -- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+  --  vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+  --  vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
   -- Remove italics from specific highlight groups
-  vim.cmd("highlight! link Comment NONE")
-  vim.cmd("highlight! link Normal NONE")
-  vim.cmd("highlight! link Identifier NONE")
-  vim.cmd("highlight! link Function NONE")
-  vim.cmd("highlight! link Keyword NONE")
-  vim.cmd("highlight! link Statement NONE")
+  -- vim.cmd("highlight! link Comment NONE")
+  -- vim.cmd("highlight! link Normal NONE")
+  -- vim.cmd("highlight! link Identifier NONE")
+  -- vim.cmd("highlight! link Function NONE")
+  -- vim.cmd("highlight! link Keyword NONE")
+  -- vim.cmd("highlight! link Statement NONE")
   -- Add more highlight groups if necessary
 end
 
-ColorMyPencils()
+--ColorMyPencils()
+
+--vim.cmd.colorscheme("gruvbox");
 
 
 require("toggleterm").setup {
-  size = 13,
+  size = 11,
   open_mapping = [[<c-x>]],
   shade_filetypes = {},
   shade_terminals = true,
@@ -782,8 +780,8 @@ require("toggleterm").setup {
 local mark = require("harpoon.mark")
 local ui = require("harpoon.ui")
 
-vim.keymap.set("n", "<leader>ad", mark.add_file)
-vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
+--vim.keymap.set("n", "<leader>ad", mark.add_file)
+--vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
 
 vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)
 vim.keymap.set("n", "<C-g>", function() ui.nav_file(2) end)
@@ -802,9 +800,6 @@ vim.api.nvim_set_keymap("v", "<C-_>", "gcc", { noremap = false })
 
 -- Map the key combination to execute :Ex
 vim.api.nvim_set_keymap('n', '<leader>pv', ':Ex<CR>', { noremap = true, silent = true })
--- Map Ctrl + t to toggle NvimTree
-vim.api.nvim_set_keymap('n', '<C-t>', ':NvimTreeOpen<CR>', { noremap = true, silent = true })
-
 -- Toggle terminal
 -- Set tab width to 4 spaces
 vim.opt.tabstop = 4
@@ -821,7 +816,45 @@ vim.api.nvim_command("autocmd FileType cpp setlocal tabstop=4")
 -- Map Leader + va to ToggleTermToggleAll
 vim.api.nvim_set_keymap('n', '<Leader>va', ':ToggleTermToggleAll<CR>', { silent = true })
 
+-- Default options:
+require("gruvbox").setup({
+  transparent_mode = true,
+})
+vim.cmd("colorscheme gruvbox")
+
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 
+-- greatest remap ever
+vim.keymap.set("x", "<leader>p", [["_dP]])
+
+-- next greatest remap ever : asbjornHaland
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
+vim.keymap.set("n", "<leader>Y", [["+Y]])
+
+vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
+
+-- This is going to get me cancelled
+vim.keymap.set("i", "<C-c>", "<Esc>")
+
+vim.keymap.set("n", "Q", "<nop>")
+vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
+vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
+
+vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
+vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
+vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
+vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
+
+vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+
+vim.keymap.set("n", "<leader>vpp", "<cmd>e ~/.dotfiles/nvim/.config/nvim/lua/theprimeagen/packer.lua<CR>");
+vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>");
+
+vim.keymap.set("n", "<leader><leader>", function()
+  vim.cmd("so")
+end)
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
