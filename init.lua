@@ -1,6 +1,6 @@
 vim.g.maplocalleader = ' '
 vim.g.mapleader = ' '
-vim.g.LanguageClient_disabled_servers = {'javascript'}
+vim.g.LanguageClient_disabled_servers = { 'javascript' }
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
@@ -11,12 +11,11 @@ if not vim.loop.fs_stat(lazypath) then
     'git',
     'clone',
     '--filter=blob:none',
-   'https://github.com/folke/lazy.nvim.git',
+    'https://github.com/folke/lazy.nvim.git',
     '--branch=stable', -- latest stable release
     lazypath,
   }
- end
-
+end
 
 vim.opt.rtp:prepend(lazypath)
 
@@ -48,7 +47,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',       opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -58,11 +57,11 @@ require('lazy').setup({
   {
     'ThePrimeagen/vim-be-good'
   },
-  
+
   {
     'sbdchd/neoformat'
   },
-   {'akinsho/toggleterm.nvim'},
+  { 'akinsho/toggleterm.nvim' },
 
 
   {
@@ -92,7 +91,7 @@ require('lazy').setup({
       'rafamadriz/friendly-snippets',
     },
   },
- 
+
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -102,7 +101,7 @@ require('lazy').setup({
         add = { text = '+' },
         change = { text = '~' },
         delete = { text = '_' },
-       topdelete = { text = '‾' },
+        topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
       on_attach = function(bufnr)
@@ -168,16 +167,16 @@ require('lazy').setup({
     },
   },
   {
-  'mbbill/undotree'
-  }, 
+    'mbbill/undotree'
+  },
 
-{
+  {
     'rose-pine/neovim',
-        as = 'rose-pine',
-        config = function()
-            vim.cmd('colorscheme rose-pine')
-        end
-    },
+    as = 'rose-pine',
+    config = function()
+      vim.cmd('colorscheme rose-pine')
+    end
+  },
 
   {
     -- Set lualine as statusline
@@ -193,7 +192,7 @@ require('lazy').setup({
     },
   },
   {
-  'nvim-lua/plenary.nvim'
+    'nvim-lua/plenary.nvim'
   },
   {
     'ThePrimeagen/harpoon'
@@ -208,35 +207,35 @@ require('lazy').setup({
     opts = {},
   },
   {
-  "nvim-neo-tree/neo-tree.nvim",
-  version = "*",
-  dependencies = {
-    "nvim-lua/plenary.nvim",
-    "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-    "MunifTanjim/nui.nvim",
+    "nvim-neo-tree/neo-tree.nvim",
+    version = "*",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+      "MunifTanjim/nui.nvim",
+    },
+    config = function()
+      require('neo-tree').setup {}
+    end,
   },
-  config = function ()
-    require('neo-tree').setup {}
-  end,
-},
   {
-  "windwp/nvim-autopairs",
-  -- Optional dependency
-  dependencies = { 'hrsh7th/nvim-cmp' },
-  config = function()
-    require("nvim-autopairs").setup {}
-    -- If you want to automatically add `(` after selecting a function or method
-    local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-    local cmp = require('cmp')
-    cmp.event:on(
-      'confirm_done',
-      cmp_autopairs.on_confirm_done()
-    )
-  end,
-},
+    "windwp/nvim-autopairs",
+    -- Optional dependency
+    dependencies = { 'hrsh7th/nvim-cmp' },
+    config = function()
+      require("nvim-autopairs").setup {}
+      -- If you want to automatically add `(` after selecting a function or method
+      local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+      local cmp = require('cmp')
+      cmp.event:on(
+        'confirm_done',
+        cmp_autopairs.on_confirm_done()
+      )
+    end,
+  },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',  opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -259,39 +258,39 @@ require('lazy').setup({
     },
   },
 
- {
+  {
     'neovim/nvim-lspconfig',
     config = function()
-        require('lspconfig').rust_analyzer.setup{}
+      require('lspconfig').rust_analyzer.setup {}
     end
-},
+  },
 
   {
     'neovim/nvim-lspconfig',
     config = function()
-        require('lspconfig').tsserver.setup{}
+      require('lspconfig').tsserver.setup {}
     end
   },
   {
     'neovim/nvim-lspconfig',
     config = function()
-        require('lspconfig').eslint.setup{}
+      require('lspconfig').eslint.setup {}
     end
   },
- {
+  {
     'neovim/nvim-lspconfig',
     config = function()
-        require('lspconfig').clangd.setup{}
+      require('lspconfig').clangd.setup {}
     end
-  }, 
+  },
   {
     'numToStr/Comment.nvim',
     opts = {
-        -- add any options here
+      -- add any options here
     },
     lazy = false,
-},
-    {
+  },
+  {
     'sbdchd/neoformat'
   }
 
@@ -539,7 +538,7 @@ local on_attach = function(_, bufnr)
 end
 
 
-require("toggleterm").setup{
+require("toggleterm").setup {
   size = 20,
   open_mapping = [[<c-x>]],
   shade_filetypes = {},
@@ -573,13 +572,13 @@ require('mason-lspconfig').setup()
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
-   --clangd = {},
+  --clangd = {},
   -- gopls = {},
-   --pyright = {},
-   --rust_analyzer = {},
-   --tsserver = {},
-    --eslint = {},
-   --html = { filetypes = { 'html', 'twig', 'hbs'} },
+  --pyright = {},
+  --rust_analyzer = {},
+  --tsserver = {},
+  --eslint = {},
+  --html = { filetypes = { 'html', 'twig', 'hbs'} },
 
   lua_ls = {
     Lua = {
@@ -669,31 +668,31 @@ cmp.setup {
 }
 
 function ColorMyPencils(color)
-    color = color or "rose-pine"
-    
-    -- Configure the Rose Pine color scheme
-    require('rose-pine').setup({
-        disable_background = true,
-        styles = {
-          italic = false
-    }
-    })
-    
-    -- Set the Vim color scheme
-    vim.cmd.colorscheme(color)
-    
-    -- Set additional customizations
-    vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-    vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+  color = color or "rose-pine"
 
-    -- Remove italics from specific highlight groups
-    vim.cmd("highlight! link Comment NONE")
-    vim.cmd("highlight! link Normal NONE")
-    vim.cmd("highlight! link Identifier NONE")
-    vim.cmd("highlight! link Function NONE")
-    vim.cmd("highlight! link Keyword NONE")
-    vim.cmd("highlight! link Statement NONE")
-    -- Add more highlight groups if necessary
+  -- Configure the Rose Pine color scheme
+  require('rose-pine').setup({
+    transparent = true,
+    styles = {
+      italic = false
+    }
+  })
+
+  -- Set the Vim color scheme
+  vim.cmd.colorscheme(color)
+
+  -- Set additional customizations
+  vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+  vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+
+  -- Remove italics from specific highlight groups
+  vim.cmd("highlight! link Comment NONE")
+  vim.cmd("highlight! link Normal NONE")
+  vim.cmd("highlight! link Identifier NONE")
+  vim.cmd("highlight! link Function NONE")
+  vim.cmd("highlight! link Keyword NONE")
+  vim.cmd("highlight! link Statement NONE")
+  -- Add more highlight groups if necessary
 end
 
 ColorMyPencils()
@@ -701,7 +700,7 @@ ColorMyPencils()
 
 -- Define a function to apply Neoformat on BufWritePre event
 local function format_on_save()
-    vim.cmd('undojoin | Neoformat')
+  vim.cmd('undojoin | Neoformat')
 end
 
 -- Group autocmd commands under the group "fmt"
@@ -711,16 +710,16 @@ vim.cmd('autocmd BufWritePre * :undojoin | :Neoformat')
 vim.cmd('augroup END')
 
 
-  local mark = require("harpoon.mark")
-  local ui = require("harpoon.ui")
+local mark = require("harpoon.mark")
+local ui = require("harpoon.ui")
 
-  vim.keymap.set("n", "<leader>ad", mark.add_file)
-  vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
+vim.keymap.set("n", "<leader>ad", mark.add_file)
+vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
 
-  vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)
-  vim.keymap.set("n", "<C-g>", function() ui.nav_file(2) end)
-  vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end)
-  vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end)
+vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)
+vim.keymap.set("n", "<C-g>", function() ui.nav_file(2) end)
+vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end)
+vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end)
 
 vim.api.nvim_exec([[
 augroup cpp_mappings
@@ -740,5 +739,43 @@ vim.api.nvim_command("autocmd FileType cpp setlocal tabstop=4")
 vim.api.nvim_set_keymap("n", "<C-_>", "gcc", { noremap = false })
 vim.api.nvim_set_keymap("v", "<C-_>", "gcc", { noremap = false })
 
+
+require("tokyonight").setup({
+  -- your configuration comes here
+  -- or leave it empty to use the default settings
+  style = "night",        -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
+  light_style = "day",    -- The theme is used when the background is set to light
+  transparent = true,     -- Enable this to disable setting the background color
+  terminal_colors = true, -- Configure the colors used when opening a `:terminal` in [Neovim](https://github.com/neovim/neovim)
+  styles = {
+    -- Style to be applied to different syntax groups
+    -- Value is any valid attr-list value for `:help nvim_set_hl`
+    comments = { italic = true },
+    keywords = { italic = true },
+    functions = {},
+    variables = {},
+    -- Background styles. Can be "dark", "transparent" or "normal"
+    sidebars = "dark",              -- style for sidebars, see below
+    floats = "dark",                -- style for floating windows
+  },
+  sidebars = { "qf", "help" },      -- Set a darker background on sidebar-like windows. For example: `["qf", "vista_kind", "terminal", "packer"]`
+  day_brightness = 0.3,             -- Adjusts the brightness of the colors of the **Day** style. Number between 0 and 1, from dull to vibrant colors
+  hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead. Should work with the standard **StatusLine** and **LuaLine**.
+  dim_inactive = false,             -- dims inactive windows
+  lualine_bold = false,             -- When `true`, section headers in the lualine theme will be bold
+
+  --- You can override specific color groups to use other groups or a hex color
+  --- function will be called with a ColorScheme table
+  ---@param colors ColorScheme
+  on_colors = function(colors) end,
+
+  --- You can override specific highlights to use other groups or a hex color
+  --- function will be called with a Highlights and ColorScheme table
+  ---@param highlights Highlights
+  ---@param colors ColorScheme
+  on_highlights = function(highlights, colors) end,
+})
+
+
 -- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et 
+-- vim: ts=2 sts=2 sw=2 et

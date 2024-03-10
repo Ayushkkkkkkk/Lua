@@ -1,3 +1,4 @@
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -638,23 +639,26 @@ require('lazy').setup {
     end,
   },
 
-  -- { -- You can easily change to a different colorscheme.
-  --   -- Change the name of the colorscheme plugin below, and then
-  --   -- change the command in the config to whatever the name of that colorscheme is
-  --   --
-  --   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
-  --   'folke/tokyonight.nvim',
-  --   lazy = false,    -- make sure we load this during startup if it is your main colorscheme
-  --   priority = 1000, -- make sure to load this before all the other start plugins
-  --   config = function()
-  --     -- Load the colorscheme here
-  --     vim.cmd.colorscheme 'gruvbox'
-  --
-  --     -- You can configure highlights by doing something like
-  --     vim.cmd.hi 'Comment gui=none'
-  --   end,
-  -- },
+  { -- You can easily change to a different colorscheme.
+    -- Change the name of the colorscheme plugin below, and then
+    -- change the command in the config to whatever the name of that colorscheme is
+    --
+    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
+    'folke/tokyonight.nvim',
+    lazy = false,    -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
+    config = function()
+      -- Load the colorscheme here.
+      -- Like many other themes, this one has different styles, and you could load
+      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+      -- vim.cmd.colorscheme 'tokyonight'
+
+      -- You can configure highlights by doing something like
+      vim.cmd.hi 'Comment gui=none'
+    end,
+  },
   { "ellisonleao/gruvbox.nvim", priority = 1000,    config = true,                              opts = ... },
+
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
@@ -695,13 +699,6 @@ require('lazy').setup {
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
-  --  {
-  --    'rose-pine/neovim',
-  --    as = 'rose-pine',
-  --    config = function()
-  --      vim.cmd('colorscheme rose-pine')
-  --    end
-  --  },
   {
     'ThePrimeagen/harpoon'
   },
@@ -719,8 +716,10 @@ require('lazy').setup {
     -- this is equalent to setup({}) function
   },
   { 'rebelot/kanagawa.nvim' },
-  { 'numToStr/Comment.nvim',           opts = {} },
-  { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' },
+  { 'numToStr/Comment.nvim', opts = {} },
+  { -- Highlight, edit, and navigate code
+    'nvim-treesitter/nvim-treesitter',
+  },
   { 'tpope/vim-fugitive' },
   {
     "nvim-tree/nvim-tree.lua",
@@ -732,41 +731,66 @@ require('lazy').setup {
     config = function()
       require("nvim-tree").setup {}
     end,
-  }
+  },
+  -- Lazy Plugin
+  { 'vim-airline/vim-airline', lazy = true },
+  { 'sheerun/vim-polyglot',    lazy = true }
+
+
 }
 
+require("tokyonight").setup({
+  -- your configuration comes here
+  -- or leave it empty to use the default settings
+  style = "night",        -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
+  light_style = "day",    -- The theme is used when the background is set to light
+  transparent = true,     -- Enable this to disable setting the background color
+  terminal_colors = true, -- Configure the colors used when opening a `:terminal` in [Neovim](https://github.com/neovim/neovim)
+  styles = {
+    -- Style to be applied to different syntax groups
+    -- Value is any valid attr-list value for `:help nvim_set_hl`
+    comments = { italic = true },
+    keywords = { italic = true },
+    functions = {},
+    variables = {},
+    -- Background styles. Can be "dark", "transparent" or "normal"
+    sidebars = "dark",              -- style for sidebars, see below
+    floats = "dark",                -- style for floating windows
+  },
+  sidebars = { "qf", "help" },      -- Set a darker background on sidebar-like windows. For example: `["qf", "vista_kind", "terminal", "packer"]`
+  day_brightness = 0.3,             -- Adjusts the brightness of the colors of the **Day** style. Number between 0 and 1, from dull to vibrant colors
+  hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead. Should work with the standard **StatusLine** and **LuaLine**.
+  dim_inactive = false,             -- dims inactive windows
+  lualine_bold = false,             -- When `true`, section headers in the lualine theme will be bold
 
+  --- You can override specific color groups to use other groups or a hex color
+  --- function will be called with a ColorScheme table
+  ---@param colors ColorScheme
+  on_colors = function(colors) end,
+
+  --- You can override specific highlights to use other groups or a hex color
+  --- function will be called with a Highlights and ColorScheme table
+  ---@param highlights Highlights
+  ---@param colors ColorScheme
+  on_highlights = function(highlights, colors) end,
+})
 function ColorMyPencils(color)
-  color = color or "gruvbox"
-
-  -- Configure the Rose Pine color scheme
-  require('gruvbox').setup({
-    disable_background = false,
-    styles = {
-      italic = false
-    }
-  })
-
-  -- Set the Vim color scheme
+  color = color or "tokyonight-night"
   vim.cmd.colorscheme(color)
 
-  -- Set additional customizations
-  --  vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-  --  vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
-  -- Remove italics from specific highlight groups
-  -- vim.cmd("highlight! link Comment NONE")
-  -- vim.cmd("highlight! link Normal NONE")
-  -- vim.cmd("highlight! link Identifier NONE")
-  -- vim.cmd("highlight! link Function NONE")
-  -- vim.cmd("highlight! link Keyword NONE")
-  -- vim.cmd("highlight! link Statement NONE")
-  -- Add more highlight groups if necessary
+  vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+  vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 end
 
---ColorMyPencils()
+ColorMyPencils()
 
---vim.cmd.colorscheme("gruvbox");
+vim.opt.background = 'dark'
+
+
+-- Set background to dark
+vim.opt.background = 'dark'
+
 
 
 require("toggleterm").setup {
@@ -777,7 +801,7 @@ require("toggleterm").setup {
   shading_factor = '1',
   start_in_insert = true,
   persist_size = true,
-  direction = 'horizontal',
+  direction = 'float',
   hide_numbers = true,
   float_opts = {
     border = "curved",
@@ -792,8 +816,8 @@ require("toggleterm").setup {
 local mark = require("harpoon.mark")
 local ui = require("harpoon.ui")
 
---vim.keymap.set("n", "<leader>ad", mark.add_file)
---vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
+vim.keymap.set("n", "<leader>ad", mark.add_file)
+vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
 
 vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)
 vim.keymap.set("n", "<C-g>", function() ui.nav_file(2) end)
@@ -829,10 +853,10 @@ vim.api.nvim_command("autocmd FileType cpp setlocal tabstop=4")
 vim.api.nvim_set_keymap('n', '<Leader>va', ':ToggleTermToggleAll<CR>', { silent = true })
 
 -- Default options:
-require("gruvbox").setup({
-  transparent_mode = true,
-})
-vim.cmd("colorscheme gruvbox")
+-- require("gruvbox").setup({
+--   transparent_mode = true,
+-- })
+-- vim.cmd("colorscheme gruvbox")
 
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
@@ -847,8 +871,7 @@ vim.keymap.set("n", "<leader>Y", [["+Y]])
 
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
--- This is going to get me cancelled
-vim.keymap.set("i", "<C-c>", "<Esc>")
+
 
 vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
@@ -869,6 +892,28 @@ vim.keymap.set("n", "<leader><leader>", function()
   vim.cmd("so")
 end)
 vim.api.nvim_set_keymap('n', '<C-t>', ':NvimTreeOpen<CR>', { noremap = true, silent = true })
+
+-- Set transparency for GUI
+vim.api.nvim_command('hi Normal guibg=NONE ctermbg=NONE')
+vim.api.nvim_command('hi SignColumn guibg=NONE ctermbg=NONE')
+vim.api.nvim_command('hi LineNr guibg=NONE ctermbg=NONE')
+vim.api.nvim_command('hi CursorLineNr guibg=NONE ctermbg=NONE')
+vim.api.nvim_command('hi VertSplit guibg=NONE ctermbg=NONE')
+vim.api.nvim_command('hi EndOfBuffer guibg=NONE ctermbg=NONE')
+vim.api.nvim_command('hi CursorLine guibg=NONE ctermbg=NONE')
+--
+-- Set transparency for terminal
+vim.api.nvim_command('hi Normal cterm=NONE')
+vim.api.nvim_command('hi SignColumn cterm=NONE')
+vim.api.nvim_command('hi LineNr cterm=NONE')
+vim.api.nvim_command('hi CursorLineNr cterm=NONE')
+vim.api.nvim_command('hi VertSplit cterm=NONE')
+vim.api.nvim_command('hi EndOfBuffer cterm=NONE')
+vim.api.nvim_command('hi CursorLine cterm=NONE')
+--
+--
+-- Disable displaying special characters for whitespace
+vim.opt.list = false
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
