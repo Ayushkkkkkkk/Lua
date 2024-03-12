@@ -1,4 +1,3 @@
-
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -7,11 +6,6 @@ vim.g.maplocalleader = ' '
 
 
 
-
-
-
--- Automatically adjust Neovim's window size based on the terminal size
-vim.api.nvim_command('autocmd VimResized * exe "resize" &lines')
 
 
 -- [[ Setting options ]]
@@ -732,9 +726,15 @@ require('lazy').setup {
       require("nvim-tree").setup {}
     end,
   },
-  -- Lazy Plugin
-  { 'vim-airline/vim-airline', lazy = true },
-  { 'sheerun/vim-polyglot',    lazy = true }
+  {
+    'akinsho/flutter-tools.nvim',
+    lazy = false,
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'stevearc/dressing.nvim', -- optional for vim.ui.select
+    },
+    config = true,
+  }
 
 
 }
@@ -885,14 +885,10 @@ vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
-vim.keymap.set("n", "<leader>vpp", "<cmd>e ~/.dotfiles/nvim/.config/nvim/lua/theprimeagen/packer.lua<CR>");
-vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>");
-
 vim.keymap.set("n", "<leader><leader>", function()
   vim.cmd("so")
 end)
-vim.api.nvim_set_keymap('n', '<C-t>', ':NvimTreeOpen<CR>', { noremap = true, silent = true })
-
+vim.api.nvim_set_keymap('n', '<C-t>', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
 -- Set transparency for GUI
 vim.api.nvim_command('hi Normal guibg=NONE ctermbg=NONE')
 vim.api.nvim_command('hi SignColumn guibg=NONE ctermbg=NONE')
