@@ -1,3 +1,88 @@
+--[[
+
+  =====================================================================
+  ==================== READ THIS BEFORE CONTINUING ====================
+  =====================================================================
+  ========                                    .-----.          ========
+  ========         .----------------------.   | === |          ========
+  ========         |.-""""""""""""""""""-.|   |-----|          ========
+  ========         ||                    ||   | === |          ========
+  ========         ||   KICKSTART.NVIM   ||   |-----|          ========
+  ========         ||                    ||   | === |          ========
+  ========         ||                    ||   |-----|          ========
+  ========         ||:Tutor              ||   |:::::|          ========
+  ========         |'-..................-'|   |____o|          ========
+  ========         `"")----------------(""`   ___________      ========
+  ========        /::::::::::|  |::::::::::\  \ no mouse \     ========
+  ========       /:::========|  |==hjkl==:::\  \ required \    ========
+  ========      '""""""""""""'  '""""""""""""'  '""""""""""'   ========
+  ========                                                     ========
+  =====================================================================
+  =====================================================================
+  What is Kickstart?
+
+    Kickstart.nvim is *not* a distribution.
+
+    Kickstart.nvim is a starting point for your own configuration.
+      The goal is that you can read every line of code, top-to-bottom, understand
+      what your configuration is doing, and modify it to suit your needs.
+
+      Once you've done that, you can start exploring, configuring and tinkering to
+      make Neovim your own! That might mean leaving kickstart just the way it is for a while
+      or immediately breaking it into modular pieces. It's up to you!
+
+      If you don't know anything about Lua, I recommend taking some time to read through
+      a guide. One possible example which will only take 10-15 minutes:
+        - https://learnxinyminutes.com/docs/lua/
+
+      After understanding a bit more about Lua, you can use `:help lua-guide` as a
+      reference for how Neovim integrates Lua.
+      - :help lua-guide
+      - (or HTML version): https://neovim.io/doc/user/lua-guide.html
+
+  Kickstart Guide:
+
+    TODO: The very first thing you should do is to run the command `:Tutor` in Neovim.
+
+      If you don't know what this means, type the following:
+        - <escape key>
+        - :
+        - Tutor
+        - <enter key>
+
+      (If you already know how the Neovim basics, you can skip this step)
+
+    Once you've completed that, you can continue working through **AND READING** the rest
+    of the kickstart init.lua
+
+    Next, run AND READ `:help`.
+      This will open up a help window with some basic information
+      about reading, navigating and searching the builtin help documentation.
+
+      This should be the first place you go to look when you're stuck or confused
+      with something. It's one of my favorite neovim features.
+
+      MOST IMPORTANTLY, we provide a keymap "<space>sh" to [s]earch the [h]elp documentation,
+      which is very useful when you're not sure exactly what you're looking for.
+
+    I have left several `:help X` comments throughout the init.lua
+      These are hints about where to find more information about the relevant settings,
+      plugins or neovim features used in kickstart.
+
+     NOTE: Look for lines like this
+
+      Throughout the file. These are for you, the reader, to help understand what is happening.
+      Feel free to delete them once you know what you're doing, but they should serve as a guide
+      for when you are first encountering a few different constructs in your nvim config.
+
+  If you experience any errors while trying to install kickstart, run `:checkhealth` for more info
+
+  I hope you enjoy your Neovim journey,
+  - TJ
+
+  P.S. You can delete this when you're done too. It's your config now! :)
+  --]]
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -653,7 +738,6 @@ require('lazy').setup {
   },
   { "ellisonleao/gruvbox.nvim", priority = 1000,    config = true,                              opts = ... },
 
-
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -700,9 +784,6 @@ require('lazy').setup {
     'Mofiqul/vscode.nvim'
   },
   {
-    'navarasu/onedark.nvim'
-  },
-  {
     'windwp/nvim-autopairs',
     event = "InsertEnter",
     config = true
@@ -711,9 +792,6 @@ require('lazy').setup {
   },
   { 'rebelot/kanagawa.nvim' },
   { 'numToStr/Comment.nvim', opts = {} },
-  { -- Highlight, edit, and navigate code
-    'nvim-treesitter/nvim-treesitter',
-  },
   { 'tpope/vim-fugitive' },
   {
     "nvim-tree/nvim-tree.lua",
@@ -726,6 +804,7 @@ require('lazy').setup {
       require("nvim-tree").setup {}
     end,
   },
+  { "rose-pine/neovim",      name = "rose-pine" },
   {
     'akinsho/flutter-tools.nvim',
     lazy = false,
@@ -733,8 +812,38 @@ require('lazy').setup {
       'nvim-lua/plenary.nvim',
       'stevearc/dressing.nvim', -- optional for vim.ui.select
     },
-    config = true,
-  }
+  },
+  { "catppuccin/nvim",       name = "catppuccin", priority = 1000 },
+  { 'tanvirtin/monokai.nvim' },
+  { 'Mofiqul/vscode.nvim' },
+  { 'navarasu/onedark.nvim' },
+  { "rebelot/kanagawa.nvim" },
+  { 'shaunsingh/nord.nvim' },
+  { -- Highlight, edit, and navigate code
+    'nvim-treesitter/nvim-treesitter',
+    build = ':TSUpdate',
+    opts = {
+      ensure_installed = { 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc', 'rust', 'typescript' },
+      -- Autoinstall languages that are not installed
+      auto_install = true,
+      highlight = { enable = true },
+      indent = { enable = true },
+    },
+    config = function(_, opts)
+      -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
+
+      ---@diagnostic disable-next-line: missing-fields
+      require('nvim-treesitter.configs').setup(opts)
+
+      -- There are additional nvim-treesitter modules that you can use to interact
+      -- with nvim-treesitter. You should go explore a few and see what interests you:
+      --
+      --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
+      --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
+      --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    end,
+  },
+
 
 
 }
@@ -774,8 +883,191 @@ require("tokyonight").setup({
   ---@param colors ColorScheme
   on_highlights = function(highlights, colors) end,
 })
+-- Default options:
+require("gruvbox").setup({
+  terminal_colors = true, -- add neovim terminal colors
+  undercurl = true,
+  underline = true,
+  bold = true,
+  italic = {
+    strings = false,
+    emphasis = true,
+    comments = false,
+    operators = false,
+    folds = false,
+  },
+  strikethrough = true,
+  invert_selection = false,
+  invert_signs = false,
+  invert_tabline = false,
+  invert_intend_guides = false,
+  inverse = true,    -- invert background for search, diffs, statuslines and errors
+  contrast = "hard", -- can be "hard", "soft" or empty string
+  palette_overrides = {},
+  overrides = {},
+  dim_inactive = false,
+  transparent_mode = true,
+})
+-- vim.cmd("colorscheme gruvbox")
+
+vim.cmd('hi Normal guibg=black')
+require("rose-pine").setup({
+  disable_background = true,
+  variant = "auto",      -- auto, main, moon, or dawn
+  dark_variant = "main", -- main, moon, or dawn
+  dim_inactive_windows = false,
+  extend_background_behind_borders = true,
+
+  enable = {
+    terminal = true,
+    legacy_highlights = true, -- Improve compatibility for previous versions of Neovim
+    migrations = true,        -- Handle deprecated options automatically
+  },
+
+  styles = {
+    bold = true,
+    italic = false,
+    transparency = false,
+  },
+
+  groups = {
+    border = "muted",
+    link = "iris",
+    panel = "surface",
+    error = "love",
+    hint = "iris",
+    info = "foam",
+    note = "pine",
+    todo = "rose",
+    warn = "gold",
+
+    git_add = "foam",
+    git_change = "rose",
+    git_delete = "love",
+    git_dirty = "rose",
+    git_ignore = "muted",
+    git_merge = "iris",
+    git_rename = "pine",
+    git_stage = "iris",
+    git_text = "rose",
+    git_untracked = "subtle",
+
+    h1 = "iris",
+    h2 = "foam",
+    h3 = "rose",
+    h4 = "gold",
+    h5 = "pine",
+    h6 = "foam",
+  },
+
+  highlight_groups = {
+    -- Comment = { fg = "foam" },
+    -- VertSplit = { fg = "muted", bg = "muted" },
+
+    -- You can add more intermediate colors if desired
+  },
+
+  before_highlight = function(group, highlight, palette)
+    -- Disable all undercurls
+    -- if highlight.undercurl then
+    --     highlight.undercurl = false
+    -- end
+    --
+    -- Change palette colour
+    -- if highlight.fg == palette.pine then
+    --     highlight.fg = palette.foam
+    -- end
+  end,
+})
+
+--vim.cmd("colorscheme rose-pine")
+-- vim.cmd("colorscheme rose-pine-main")
+-- vim.cmd("colorscheme rose-pine-moon")
+-- vim.cmd("colorscheme rose-pine-dawn")
+
+
+require("catppuccin").setup({
+  flavour = "mocha", -- latte, frappe, macchiato, mocha
+  background = {     -- :h background
+    light = "latte",
+    dark = "mocha",
+  },
+  transparent_background = false, -- disables setting the background color.
+  show_end_of_buffer = false,     -- shows the '~' characters after the end of buffers
+  term_colors = false,            -- sets terminal colors (e.g. `g:terminal_color_0`)
+  dim_inactive = {
+    enabled = false,              -- dims the background color of inactive window
+    shade = "dark",
+    percentage = 0.15,            -- percentage of the shade to apply to the inactive window
+  },
+  no_italic = false,              -- Force no italic
+  no_bold = false,                -- Force no bold
+  no_underline = false,           -- Force no underline
+  styles = {                      -- Handles the styles of general hi groups (see `:h highlight-args`):
+    comments = { "italic" },      -- Change the style of comments
+    conditionals = { "italic" },
+    loops = {},
+    functions = {},
+    keywords = {},
+    strings = {},
+    variables = {},
+    numbers = {},
+    booleans = {},
+    properties = {},
+    types = {},
+    operators = {},
+    -- miscs = {}, -- Uncomment to turn off hard-coded styles
+  },
+  color_overrides = {},
+  custom_highlights = {},
+  integrations = {
+    cmp = true,
+    gitsigns = true,
+    nvimtree = true,
+    treesitter = true,
+    notify = false,
+    mini = {
+      enabled = true,
+      indentscope_color = "",
+    },
+    -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+  },
+})
+
+-- setup must be called before loading
+-- vim.cmd.colorscheme "catppuccin"
+
+-- Default options:
+require('kanagawa').setup({
+  compile = false,  -- enable compiling the colorscheme
+  undercurl = true, -- enable undercurls
+  commentStyle = { italic = true },
+  functionStyle = {},
+  keywordStyle = { italic = true },
+  statementStyle = { bold = true },
+  typeStyle = {},
+  transparent = false,   -- do not set background color
+  dimInactive = false,   -- dim inactive window `:h hl-NormalNC`
+  terminalColors = true, -- define vim.g.terminal_color_{0,17}
+  colors = {             -- add/modify theme and palette colors
+    palette = {},
+    theme = { wave = {}, lotus = {}, dragon = {}, all = {} },
+  },
+  overrides = function(colors) -- add/modify highlights
+    return {}
+  end,
+  theme = "wave",  -- Load "wave" theme when 'background' option is not set
+  background = {   -- map the value of 'background' option to a theme
+    dark = "wave", -- try "dragon" !
+    light = "lotus"
+  },
+})
+
+-- setup must be called before loading
+-- vim.cmd("colorscheme kanagawa")
+
 function ColorMyPencils(color)
-  color = color or "tokyonight-night"
+  color = color or "vscode"
   vim.cmd.colorscheme(color)
 
 
@@ -783,9 +1075,13 @@ function ColorMyPencils(color)
   vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 end
 
-ColorMyPencils()
+require('onedark').setup {
+  style = 'dark'
+}
 
-vim.opt.background = 'dark'
+--ColorMyPencils()
+vim.cmd("colorscheme tokyonight-night")
+--vim.opt.background = 'dark'
 
 
 -- Set background to dark
@@ -812,6 +1108,7 @@ require("toggleterm").setup {
     },
   },
 }
+
 --haropoon
 local mark = require("harpoon.mark")
 local ui = require("harpoon.ui")
@@ -819,10 +1116,10 @@ local ui = require("harpoon.ui")
 vim.keymap.set("n", "<leader>ad", mark.add_file)
 vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
 
-vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)
-vim.keymap.set("n", "<C-g>", function() ui.nav_file(2) end)
-vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end)
-vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end)
+vim.keymap.set("n", "<C-g>", function() ui.nav_file(1) end)
+vim.keymap.set("n", "<C-h>", function() ui.nav_file(2) end)
+vim.keymap.set("n", "<C-b>", function() ui.nav_file(3) end)
+vim.keymap.set("n", "<C-n>", function() ui.nav_file(4) end)
 
 -- Keybindings for { completion, "jk" for escape, ctrl-a to select all
 vim.api.nvim_set_keymap('i', '{<CR>', '{<CR>}<Esc>O', { noremap = true, silent = true })
@@ -853,11 +1150,6 @@ vim.api.nvim_command("autocmd FileType cpp setlocal tabstop=4")
 vim.api.nvim_set_keymap('n', '<Leader>va', ':ToggleTermToggleAll<CR>', { silent = true })
 
 -- Default options:
--- require("gruvbox").setup({
---   transparent_mode = true,
--- })
--- vim.cmd("colorscheme gruvbox")
-
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
@@ -871,6 +1163,7 @@ vim.keymap.set("n", "<leader>Y", [["+Y]])
 
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
+-- Your Neovim Lua configuration file (e.g., init.lua)
 
 
 vim.keymap.set("n", "Q", "<nop>")
@@ -906,10 +1199,15 @@ vim.api.nvim_command('hi CursorLineNr cterm=NONE')
 vim.api.nvim_command('hi VertSplit cterm=NONE')
 vim.api.nvim_command('hi EndOfBuffer cterm=NONE')
 vim.api.nvim_command('hi CursorLine cterm=NONE')
---
+-- --
 --
 -- Disable displaying special characters for whitespace
 vim.opt.list = false
+
+vim.opt.guicursor = ""
+require 'nvim-treesitter.install'.prefer_git = false
+require 'nvim-treesitter.install'.compilers = { "clang", "gcc" }
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
