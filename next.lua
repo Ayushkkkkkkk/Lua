@@ -666,14 +666,11 @@ require('lazy').setup {
       --  - yinq - [Y]ank [I]nside [N]ext [']quote
       --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
-
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
-      --
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
-
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
@@ -719,7 +716,7 @@ require('lazy').setup {
       require("nvim-tree").setup {}
     end,
   },
-  { "rose-pine/neovim",      name = "rose-pine" },
+  { "rose-pine/neovim",          name = "rose-pine" },
   {
     'akinsho/flutter-tools.nvim',
     lazy = false,
@@ -728,12 +725,22 @@ require('lazy').setup {
       'stevearc/dressing.nvim', -- optional for vim.ui.select
     },
   },
-  { "catppuccin/nvim",       name = "catppuccin", priority = 1000 },
+  { "catppuccin/nvim",           name = "catppuccin", priority = 1000 },
   { 'tanvirtin/monokai.nvim' },
   { 'Mofiqul/vscode.nvim' },
   { 'navarasu/onedark.nvim' },
   { "rebelot/kanagawa.nvim" },
   { 'shaunsingh/nord.nvim' },
+  { "tjdevries/colorbuddy.nvim" },
+  { 'nvim-treesitter/playground' },
+  { 'mbbill/undotree' },
+  "folke/trouble.nvim",
+  dependencies = { "nvim-tree/nvim-web-devicons" },
+  opts = {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+  },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
@@ -766,6 +773,7 @@ require('lazy').setup {
 require("tokyonight").setup({
   -- your configuration comes here
   -- or leave it empty to use the default settings
+  disable_background = true,
   style = "night",        -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
   light_style = "day",    -- The theme is used when the background is set to light
   transparent = true,     -- Enable this to disable setting the background color
@@ -773,13 +781,14 @@ require("tokyonight").setup({
   styles = {
     -- Style to be applied to different syntax groups
     -- Value is any valid attr-list value for `:help nvim_set_hl`
-    comments = { italic = true },
+    comments = { italic = false },
     keywords = { italic = true },
+
     functions = {},
     variables = {},
     -- Background styles. Can be "dark", "transparent" or "normal"
-    sidebars = "dark",              -- style for sidebars, see below
-    floats = "dark",                -- style for floating windows
+    sidebars = "transparent",       -- style for sidebars, see below
+    floats = "transparent",         -- style for floating windows
   },
   sidebars = { "qf", "help" },      -- Set a darker background on sidebar-like windows. For example: `["qf", "vista_kind", "terminal", "packer"]`
   day_brightness = 0.3,             -- Adjusts the brightness of the colors of the **Day** style. Number between 0 and 1, from dull to vibrant colors
@@ -821,7 +830,7 @@ require("gruvbox").setup({
   palette_overrides = {},
   overrides = {},
   dim_inactive = false,
-  transparent_mode = true,
+  transparent_mode = false,
 })
 -- vim.cmd("colorscheme gruvbox")
 
@@ -841,8 +850,8 @@ require("rose-pine").setup({
 
   styles = {
     bold = true,
-    italic = false,
-    transparency = false,
+    italic = true,
+    transparency = true,
   },
 
   groups = {
@@ -907,23 +916,23 @@ require("catppuccin").setup({
     light = "latte",
     dark = "mocha",
   },
-  transparent_background = false, -- disables setting the background color.
-  show_end_of_buffer = false,     -- shows the '~' characters after the end of buffers
-  term_colors = false,            -- sets terminal colors (e.g. `g:terminal_color_0`)
+  transparent_background = true, -- disables setting the background color.
+  show_end_of_buffer = false,    -- shows the '~' characters after the end of buffers
+  term_colors = false,           -- sets terminal colors (e.g. `g:terminal_color_0`)
   dim_inactive = {
-    enabled = false,              -- dims the background color of inactive window
+    enabled = false,             -- dims the background color of inactive window
     shade = "dark",
-    percentage = 0.15,            -- percentage of the shade to apply to the inactive window
+    percentage = 0.15,           -- percentage of the shade to apply to the inactive window
   },
-  no_italic = false,              -- Force no italic
-  no_bold = false,                -- Force no bold
-  no_underline = false,           -- Force no underline
-  styles = {                      -- Handles the styles of general hi groups (see `:h highlight-args`):
-    comments = { "italic" },      -- Change the style of comments
-    conditionals = { "italic" },
+  no_italic = false,             -- Force no italic
+  no_bold = false,               -- Force no bold
+  no_underline = false,          -- Force no underline
+  styles = {                     -- Handles the styles of general hi groups (see `:h highlight-args`):
+    comments = {},               -- Change the style of comments
+    conditionals = {},
     loops = {},
     functions = {},
-    keywords = {},
+    keywords = { "italic" },
     strings = {},
     variables = {},
     numbers = {},
@@ -981,21 +990,50 @@ require('kanagawa').setup({
 -- setup must be called before loading
 -- vim.cmd("colorscheme kanagawa")
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function ColorMyPencils(color)
-  color = color or "vscode"
+  color = color or "catppuccin"
   vim.cmd.colorscheme(color)
 
 
   vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
   vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+
+  vim.cmd("highlight! link Comment NONE")
+  vim.cmd("highlight! link Normal NONE")
+  vim.cmd("highlight! link Identifier NONE")
+  vim.cmd("highlight! link Function NONE")
+  vim.cmd("highlight! link Keyword NONE")
+  vim.cmd("highlight! link Statement NONE")
 end
 
 require('onedark').setup {
   style = 'dark'
 }
 
---ColorMyPencils()
-vim.cmd("colorscheme tokyonight-night")
+ColorMyPencils()
+-- vim.cmd("colorscheme rose-pine")
 --vim.opt.background = 'dark'
 
 
@@ -1114,7 +1152,7 @@ vim.api.nvim_command('hi CursorLineNr cterm=NONE')
 vim.api.nvim_command('hi VertSplit cterm=NONE')
 vim.api.nvim_command('hi EndOfBuffer cterm=NONE')
 vim.api.nvim_command('hi CursorLine cterm=NONE')
--- --
+--
 --
 -- Disable displaying special characters for whitespace
 vim.opt.list = false
@@ -1123,6 +1161,19 @@ vim.opt.guicursor = ""
 require 'nvim-treesitter.install'.prefer_git = false
 require 'nvim-treesitter.install'.compilers = { "clang", "gcc" }
 
+--trouble
+-- Lua
+vim.keymap.set("n", "<leader>xx", function() require("trouble").toggle() end)
+vim.keymap.set("n", "<leader>xw", function() require("trouble").toggle("workspace_diagnostics") end)
+vim.keymap.set("n", "<leader>xd", function() require("trouble").toggle("document_diagnostics") end)
+vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix") end)
+vim.keymap.set("n", "<leader>xl", function() require("trouble").toggle("loclist") end)
+vim.keymap.set("n", "gR", function() require("trouble").toggle("lsp_references") end)
+
+-- undotree
+vim.keymap.set('n', '<leader>zt', vim.cmd.UndotreeToggle)
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+

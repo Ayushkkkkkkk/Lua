@@ -776,15 +776,6 @@ require("tokyonight").setup({
   on_highlights = function(highlights, colors) end,
 })
 
--- Set the Tokyo theme and customize the brightness
-vim.cmd [[packadd tokyonight.nvim]]
-vim.g.tokyonight_style = "night" -- or "storm" or "day" depending on your preference
-
--- Customize the colors to dim the brightness
-vim.cmd [[
-  highlight Normal guibg=#1a1b26 guifg=#abb2bf  -- Customize the background and foreground colors to dim brightness
-]]
-
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
